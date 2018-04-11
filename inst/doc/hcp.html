@@ -12,7 +12,7 @@
 
 <meta name="author" content="John Muschelli" />
 
-<meta name="date" content="2018-02-01" />
+<meta name="date" content="2018-04-11" />
 
 <title>Getting Data from the Human Connectome Project (HCP)</title>
 
@@ -280,29 +280,29 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Getting Data from the Human Connectome Project (HCP)</h1>
 <h4 class="author"><em>John Muschelli</em></h4>
-<h4 class="date"><em>2018-02-01</em></h4>
+<h4 class="date"><em>2018-04-11</em></h4>
 
 
 
 <p>All code for this document is located at <a href="https://raw.githubusercontent.com/muschellij2/neuroc/master/neurohcp/index.R">here</a>.</p>
-<section id="human-connectome-project-hcp" class="level1">
+<div id="human-connectome-project-hcp" class="section level1">
 <h1>Human Connectome Project (HCP)</h1>
 <p>The <a href="https://www.humanconnectome.org/">Human Connectome Project</a> (HCP) is a consortium of sites whose goal is to map “human brain circuitry in a target number of 1200 healthy adults using cutting-edge methods of noninvasive neuroimaging” (<a href="https://www.humanconnectome.org/" class="uri">https://www.humanconnectome.org/</a>). It includes a large cohort of individuals with a vast amount of neuroimaging data ranging from structural magnetic resonance imaging (MRI), functional MRI – both during tasks and resting-state– and diffusion tensor imaging (DTI), from multiple sites.</p>
-</section>
-<section id="getting-access-to-the-data" class="level1">
+</div>
+<div id="getting-access-to-the-data" class="section level1">
 <h1>Getting Access to the Data</h1>
 <p>The data is available to those that agree to the license. Users can either pay to get hard drives of the data sent to them, named “Connectome In A Box”, or access the data online. The data can be obtained through the database at <a href="http://db.humanconnectome.org" class="uri">http://db.humanconnectome.org</a>. Data can be downloaded from the website directly in a browser or through an Amazon Simple Storage Solution (S3) bucket. We will focus on accessing the data from S3.</p>
-<section id="getting-an-accessapi-key" class="level2">
+<div id="getting-an-accessapi-key" class="section level2">
 <h2>Getting an Access/API Key</h2>
 <p>Once logged into <a href="http://db.humanconnectome.org" class="uri">http://db.humanconnectome.org</a> and the terms are accepted, the user must enable Amazon S3 access for their Amazon account. The user will then be provided an access key identifier (ID), which is required to authenticate a user to Amazon as well as a secret key. These access and secret keys are necessary for the <a href="https://github.com/muschellij2/neurohcp">neurohcp package</a>, and will be referred to as access keys or API (application program interface) keys.</p>
-</section>
-</section>
-<section id="installing-the-neurohcp-package" class="level1">
+</div>
+</div>
+<div id="installing-the-neurohcp-package" class="section level1">
 <h1>Installing the neurohcp package</h1>
 <p>We will install the neurohcp package using the Neuroconductor installer:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">source</span>(<span class="st">&quot;http://neuroconductor.org/neurocLite.R&quot;</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">neuro_install</span>(<span class="st">&quot;neurohcp&quot;</span>, <span class="dt">release =</span> <span class="st">&quot;stable&quot;</span>)</a></code></pre></div>
-<section id="setting-the-api-key" class="level2">
+<div id="setting-the-api-key" class="section level2">
 <h2>Setting the API key</h2>
 <p>In the <code>neurohcp</code> package, <code>set_aws_api_key</code> will set the AWS access keys:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">set_aws_api_key</span>(<span class="dt">access_key =</span> <span class="st">&quot;ACCESS_KEY&quot;</span>, <span class="dt">secret_key =</span> <span class="st">&quot;SECRET_KEY&quot;</span>)</a></code></pre></div>
@@ -317,8 +317,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 3                 hcp-openaccess-logs 2014-05-15T18:57:07.000Z
 4                hcp-openaccess-trail 2016-06-02T20:22:11.000Z</code></pre>
 <p>We see that <code>hcp-openaccess</code> is a bucket that we have access to, and therefore have access to the data.</p>
-</section>
-<section id="getting-data-downloading-a-directory-of-data" class="level2">
+</div>
+<div id="getting-data-downloading-a-directory-of-data" class="section level2">
 <h2>Getting Data: Downloading a Directory of Data</h2>
 <p>In the neurohcp package, there is a data set indicating the scans read for each subject, named <code>hcp_900_scanning_info</code>. We can subset those subjects that have diffusion tensor imaging:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">ids_with_dwi =<span class="st"> </span>hcp_<span class="dv">900</span>_scanning_info <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -345,15 +345,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>If we create a new column with all the directories, we can iterate over these to download all the diffusion data for these subjects from the HCP database.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">ids_with_dwi =<span class="st"> </span>ids_with_dwi <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id_dir =</span> <span class="kw">paste0</span>(<span class="st">&quot;HCP/&quot;</span>, id, <span class="st">&quot;/T1w/Diffusion&quot;</span>))</a></code></pre></div>
-</section>
-<section id="getting-data-downloading-a-single-file" class="level2">
+</div>
+<div id="getting-data-downloading-a-single-file" class="section level2">
 <h2>Getting Data: Downloading a Single File</h2>
 <p>We can also download a single file using <code>download_hcp_file</code>. Here we will simply download the <code>bvals</code> file:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">have_aws_key</span>()) {</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">  ret =<span class="st"> </span><span class="kw">download_hcp_file</span>(<span class="st">&quot;HCP/100307/T1w/Diffusion/bvals&quot;</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">}</a></code></pre></div>
-</section>
-</section>
+</div>
+</div>
 
 
 
