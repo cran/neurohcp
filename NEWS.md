@@ -1,3 +1,12 @@
+# neurohcp 0.11.0
+
+* Fixing the \link issues with packages.
+* Overrides AWS environment variables if `sign = FALSE`.
+
+# neurohcp 0.10.0
+
+* Listing all files to fix #5. 
+
 # neurohcp 0.9.0
 
 * Use `aws.s3` for all signatures.

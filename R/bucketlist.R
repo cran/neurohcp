@@ -3,7 +3,7 @@
 #' @param region Region of S3 Bucket
 #' @param access_key Amazon S3 Access Key
 #' @param secret_key Amazon S3 Secret Key
-#' @param ... arguments to pass to \code{\link{bucket_list_df}}
+#' @param ... arguments to pass to \code{\link[aws.s3]{bucket_list_df}}
 #'
 #' @return List of Buckets
 #' @export
@@ -18,10 +18,16 @@ bucketlist <- function(
   secret_key = NULL,
   ...) {
 
+  L = set_aws_api_key(
+    access_key = access_key,
+    secret_key = secret_key,
+    default_region = region,
+    error = FALSE)
+
   res = aws.s3::bucket_list_df(
-    region = region,
-    key = access_key,
-    secret = secret_key,
+    region = L$region,
+    key = L$access_key,
+    secret = L$secret_key,
     ...)
   return(res)
   #
