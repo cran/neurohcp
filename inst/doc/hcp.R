@@ -15,10 +15,10 @@ knitr::opts_chunk$set(echo = TRUE, cache = FALSE, comment = "")
 #   neurohcp::bucketlist()
 # }
 
-## ----blist_go, echo = FALSE---------------------------------------------------
-if (have_aws_key()) {
-  neurohcp::bucketlist(verbose = FALSE)
-}
+## ----blist_go, echo = FALSE, eval = FALSE-------------------------------------
+# if (have_aws_key()) {
+#   neurohcp::bucketlist(verbose = FALSE)
+# }
 
 ## ----eval = TRUE--------------------------------------------------------------
 ids_with_dwi = hcp_900_scanning_info %>% 
@@ -40,8 +40,8 @@ r$output_files
 # ids_with_dwi = ids_with_dwi %>%
 #   mutate(id_dir = paste0("HCP/", id, "/T1w/Diffusion"))
 
-## ----dl_file------------------------------------------------------------------
-if (have_aws_key()) {
-  ret = download_hcp_file("HCP/100307/T1w/Diffusion/bvals", verbose = FALSE)
-}
+## ----dl_file, eval = FALSE----------------------------------------------------
+# if (have_aws_key()) {
+#   ret = download_hcp_file("HCP/100307/T1w/Diffusion/bvals", verbose = FALSE)
+# }
 
